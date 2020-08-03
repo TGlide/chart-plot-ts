@@ -1,0 +1,28 @@
+@import "./config.scss";
+
+.App {
+  .hero {
+    .header {
+      display: flex;
+
+      .title {
+        margin-left: 1.5rem;
+      }
+    }
+  }
+
+  .section.chart-input {
+    textarea {
+      width: 100%;
+      resize: vertical;
+    }
+  }
+
+  .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 1.5rem;
+  }
+}
