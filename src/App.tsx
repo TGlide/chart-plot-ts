@@ -1,5 +1,6 @@
 import React from "react";
 import "./styles/app.scss";
+import { Resizable } from "re-resizable";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
 
       <section className="section chart-input">
         <div className="container">
-          <textarea name="" id=""></textarea>
+          <Resizable className="chart-input-box">a</Resizable>
         </div>
       </section>
 
