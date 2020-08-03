@@ -1,52 +1,87 @@
 @import "./config.scss";
 
 .App {
+  height: 100vh;
+  max-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  .section {
+    padding: 0;
+  }
+
   .hero {
+    .hero-body {
+      padding: 1rem;
+    }
+
     .header {
       display: flex;
 
       .title {
         margin-left: 1.5rem;
+        font-size: 1.75rem;
       }
     }
   }
 
-  .chart-input-box {
-    border-radius: 1rem;
-    overflow: hidden;
-    width: 100%;
+  #event-input {
+    padding: 1rem 0 0;
 
-    display: flex;
-    flex-direction: column;
-
-    .content {
-      flex-grow: 1;
-      margin-bottom: 0;
-      overflow-y: scroll;
-    }
-
-    .input-container {
-      flex-shrink: 0;
+    .chart-input-box {
+      border-radius: 1rem;
+      overflow: hidden;
+      width: 100%;
 
       display: flex;
-      align-items: center;
-      padding-right: 1rem;
-      background: rgba($primary, 1);
+      flex-direction: column;
 
-      .label {
-        color: white;
-        padding: 1rem;
+      .content {
+        flex-grow: 1;
+        margin-bottom: 0;
+        overflow-y: scroll;
+      }
+
+      .input-container {
+        flex-shrink: 0;
+
+        display: flex;
+        align-items: center;
+        padding-right: 1rem;
+        background: rgba($primary, 1);
+
+        .label {
+          color: white;
+          padding: 1rem;
+        }
+      }
+    }
+  }
+
+  #events-chart {
+    flex-grow: 1;
+    z-index: 0;
+
+    .container {
+      height: 100%;
+      position: relative;
+
+      .chart-container {
+        position: absolute;
+        left: 0;
+        height: 100%;
+        flex-grow: 1;
+        width: 100%;
       }
     }
   }
 
   .footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-
     background-color: $secondary;
     width: 100%;
     padding: 1.5rem;
+
+    z-index: 1;
   }
 }

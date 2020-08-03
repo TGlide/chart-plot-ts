@@ -1,6 +1,7 @@
 import { Resizable } from "re-resizable";
 import React, { ChangeEvent, useState } from "react";
 import EventsList from "./components/EventsList";
+import EventsChart from "./components/EventsChart";
 import { isJsonString } from "./helpers/json";
 import "./styles/app.scss";
 
@@ -43,7 +44,7 @@ function App() {
         </div>
       </div>
 
-      <section className="section chart-input">
+      <section className="section" id="event-input">
         <div className="container">
           <Resizable
             className="card chart-input-box"
@@ -68,6 +69,14 @@ function App() {
               />
             </div>
           </Resizable>
+        </div>
+      </section>
+
+      <section className="section" id="events-chart">
+        <div className="container">
+          <div className="chart-container">
+            <EventsChart />
+          </div>
         </div>
       </section>
 
