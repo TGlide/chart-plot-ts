@@ -38,6 +38,7 @@
       flex-direction: column;
 
       .content {
+        background-color: #222f3e;
         flex-grow: 1;
         margin-bottom: 0;
         overflow-y: scroll;
@@ -49,11 +50,15 @@
         display: flex;
         align-items: center;
         padding-right: 1rem;
-        background: rgba($primary, 1);
+
+        > :not(:last-child) {
+          margin-right: 0.5rem;
+        }
 
         .label {
           color: white;
           padding: 1rem;
+          padding-right: 0;
         }
       }
     }

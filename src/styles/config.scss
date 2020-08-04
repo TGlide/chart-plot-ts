@@ -4,51 +4,79 @@
 // Set your colors
 $primary: #34b6ab;
 $primary-invert: findColorInvert($primary);
+$primary-light: findLightColor($primary);
+$primary-dark: findDarkColor($primary);
+
 $secondary: #333b54;
 $secondary-invert: findColorInvert($secondary);
+$secondary-light: findLightColor($secondary);
+$secondary-dark: findDarkColor($secondary);
 
-// Setup $colors to use as bulma classes (e.g. 'is-twitter')
-$colors: (
-  "white": (
-    $white,
-    $black,
-  ),
-  "black": (
-    $black,
-    $white,
-  ),
-  "light": (
-    $light,
-    $light-invert,
-  ),
-  "dark": (
-    $dark,
-    $dark-invert,
-  ),
-  "primary": (
-    $primary,
-    $primary-invert,
-  ),
+$custom-colors: (
   "secondary": (
     $secondary,
     $secondary-invert,
+    $secondary-light,
+    $secondary-dark,
   ),
-  "info": (
-    $info,
-    $info-invert,
+);
+
+$colors: mergeColorMaps(
+  (
+    "white": (
+      $white,
+      $black,
+    ),
+    "black": (
+      $black,
+      $white,
+    ),
+    "light": (
+      $light,
+      $light-invert,
+    ),
+    "dark": (
+      $dark,
+      $dark-invert,
+    ),
+    "primary": (
+      $primary,
+      $primary-invert,
+      $primary-light,
+      $primary-dark,
+    ),
+    "link": (
+      $link,
+      $link-invert,
+      $link-light,
+      $link-dark,
+    ),
+    "info": (
+      $info,
+      $info-invert,
+      $info-light,
+      $info-dark,
+    ),
+    "success": (
+      $success,
+      $success-invert,
+      $success-light,
+      $success-dark,
+    ),
+    "warning": (
+      $warning,
+      $warning-invert,
+      $warning-light,
+      $warning-dark,
+    ),
+    "danger": (
+      $danger,
+      $danger-invert,
+      $danger-light,
+      $danger-dark,
+    ),
   ),
-  "success": (
-    $success,
-    $success-invert,
-  ),
-  "warning": (
-    $warning,
-    $warning-invert,
-  ),
-  "danger": (
-    $danger,
-    $danger-invert,
-  ),
+  $custom-colors
 );
 
 // Links
