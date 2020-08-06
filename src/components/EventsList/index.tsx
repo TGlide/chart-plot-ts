@@ -7,9 +7,10 @@ import { VariableSizeList as List } from "react-window";
 type EventsListProps = {
   events: Object[];
   height: number;
+  style?: Object;
 };
 
-export default function EventsList({ events, height }: EventsListProps) {
+export default function EventsList({ events, height, style }: EventsListProps) {
   const getItemSize = (index: number) => {
     const size =
       24 + Math.floor(JSON.stringify(events[index]).length / 120) * 21;
@@ -43,6 +44,7 @@ export default function EventsList({ events, height }: EventsListProps) {
       itemSize={getItemSize}
       width="100%"
       className="events-list"
+      style={style}
     >
       {Item}
     </List>

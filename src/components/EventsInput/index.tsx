@@ -23,6 +23,7 @@ export default function EventsInput({
   canRedoEvents,
 }: EventsInputProps) {
   const [eventBoxHeight, setEventBoxHeight] = useState(0);
+  const [isResizing, setIsResizing] = useState(false);
   const [eventInput, setEventInput] = useState("");
 
   const eventInputBoxRef = useRef<HTMLInputElement>(null);
@@ -53,6 +54,7 @@ export default function EventsInput({
     direction,
     refToElement
   ) => {
+    setIsResizing(true);
     setEventBoxHeight(0);
   };
 
@@ -66,6 +68,7 @@ export default function EventsInput({
       const containerHeight = refToElement.clientHeight;
       const inputHeight = refToElement.children[2].clientHeight;
       setEventBoxHeight(containerHeight - inputHeight);
+      setIsResizing(false);
     }
   };
 
@@ -85,7 +88,11 @@ export default function EventsInput({
       onResizeStop={handleResizeStop}
     >
       <div className="content">
-        <EventsList events={events} height={eventBoxHeight} />
+        <EventsList
+          events={events}
+          height={eventBoxHeight}
+          style={{ opacity: isResizing ? 0 : 1 }}
+        />
       </div>
       <div
         className="input-container has-background-secondary"
