@@ -1,5 +1,5 @@
 import React from "react";
-import { ResponsiveLine, Serie } from "@nivo/line";
+import { Serie, ResponsiveLineCanvas } from "@nivo/line";
 import "./styles.scss";
 import ChartError, { isChartError } from "../../entities/ChartError";
 
@@ -11,7 +11,7 @@ export default ({ data }: EventsChartProps) => {
   return (
     <>
       {data && !isChartError(data) && (
-        <ResponsiveLine
+        <ResponsiveLineCanvas
           data={data}
           margin={{ top: 50, right: 200, bottom: 50, left: 60 }}
           xScale={{ type: "point" }}
@@ -49,10 +49,10 @@ export default ({ data }: EventsChartProps) => {
           pointColor={{ from: "color", modifiers: [] }}
           pointBorderWidth={2}
           pointBorderColor={{ from: "serieColor", modifiers: [] }}
-          pointLabel="y"
-          pointLabelYOffset={-12}
+          // pointLabel="y"
+          // pointLabelYOffset={-12}
           areaOpacity={0.05}
-          useMesh={true}
+          // useMesh={true}
           legends={[
             {
               anchor: "right",
