@@ -19,6 +19,7 @@
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
     "react-syntax-highlighter": "^13.2.1",
+    "react-window": "^1.8.5",
     "typescript": "~3.7.2",
     "use-undo": "^1.0.3"
   },
@@ -42,5 +43,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-window": "^1.8.2"
   }
 }

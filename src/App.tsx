@@ -1,15 +1,15 @@
-import { Resizable } from "re-resizable";
-import React, { ChangeEvent, useState } from "react";
-import EventsList from "./components/EventsList";
+import { Serie } from "@nivo/line";
+import { Resizable, ResizeCallback, ResizeStartCallback } from "re-resizable";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import useUndo from "use-undo";
 import EventsChart from "./components/EventsChart";
+import EventsList from "./components/EventsList";
+import ChartError from "./entities/ChartError";
+import DataEvent from "./entities/DataEvent";
+import { generateChartData } from "./helpers/chart";
+import { getExampleDataEventArr } from "./helpers/input";
 import { isJsonString } from "./helpers/json";
 import "./styles/app.scss";
-import { generateChartData } from "./helpers/chart";
-import { Serie } from "@nivo/line";
-import DataEvent from "./entities/DataEvent";
-import useUndo from "use-undo";
-import ChartError from "./entities/ChartError";
-import { getExampleDataEventArr } from "./helpers/input";
 
 function App() {
   const [
@@ -21,13 +21,15 @@ function App() {
       canUndo: canUndoEvents,
       canRedo: canRedoEvents,
     },
-  ] = useUndo<DataEvent[]>(getExampleDataEventArr(100));
+  ] = useUndo<DataEvent[]>(getExampleDataEventArr(1000));
   const { present: events } = eventsState;
-
   const [eventInput, setEventInput] = useState("");
   const [chartData, setChartData] = useState<Serie[] | ChartError | undefined>(
     undefined
   );
+  const [eventBoxHeight, setEventBoxHeight] = useState(0);
+
+  const eventInputBoxRef = useRef<HTMLInputElement>(null);
 
   const eventInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -53,10 +55,36 @@ function App() {
   const handleGenerateChart = () => {
     const data = generateChartData(events);
 
-    console.log("generateChartData res:", data);
+    // console.log("generateChartData res:", data);
 
     setChartData(data);
   };
+
+  const handleResizeStart: ResizeStartCallback = (
+    event,
+    direction,
+    refToElement
+  ) => {
+    setEventBoxHeight(0);
+  };
+
+  const handleResizeStop: ResizeCallback = (
+    event,
+    direction,
+    refToElement,
+    delta
+  ) => {
+    if (refToElement.children.length >= 3) {
+      const containerHeight = refToElement.clientHeight;
+      const inputHeight = refToElement.children[2].clientHeight;
+      setEventBoxHeight(containerHeight - inputHeight);
+    }
+  };
+
+  useEffect(() => {
+    const inputContainer = eventInputBoxRef.current;
+    if (inputContainer) setEventBoxHeight(250 - inputContainer.clientHeight);
+  }, []);
 
   return (
     <div className="App">
@@ -82,11 +110,16 @@ function App() {
             minWidth={"100%"}
             minHeight={150}
             maxHeight={"50vh"}
+            onResizeStart={handleResizeStart}
+            onResizeStop={handleResizeStop}
           >
             <div className="content">
-              <EventsList events={events} />
+              <EventsList events={events} height={eventBoxHeight} />
             </div>
-            <div className="input-container has-background-secondary">
+            <div
+              className="input-container has-background-secondary"
+              ref={eventInputBoxRef}
+            >
               <label htmlFor="" className="label">
                 Input:{" "}
               </label>
