@@ -1,16 +1,13 @@
 import { Serie } from "@nivo/line";
-import { Resizable, ResizeCallback, ResizeStartCallback } from "re-resizable";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import useUndo from "use-undo";
 import EventsChart from "./components/EventsChart";
-import EventsList from "./components/EventsList";
+import EventsInput from "./components/EventsInput";
 import ChartError from "./entities/ChartError";
 import DataEvent from "./entities/DataEvent";
 import { generateChartData } from "./helpers/chart";
 import { getExampleDataEventArr } from "./helpers/input";
-import { isJsonString } from "./helpers/json";
 import "./styles/app.scss";
-import EventsInput from "./components/EventsInput";
 
 function App() {
   const [

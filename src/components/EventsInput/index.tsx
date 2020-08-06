@@ -1,9 +1,8 @@
-import React, { useState, useRef, ChangeEvent, useEffect } from "react";
-import { Resizable, ResizeStartCallback, ResizeCallback } from "re-resizable";
+import { Resizable, ResizeCallback, ResizeStartCallback } from "re-resizable";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import DataEvent from "../../entities/DataEvent";
-import EventsList from "../EventsList";
-import { Actions } from "use-undo";
 import { isJsonString } from "../../helpers/json";
+import EventsList from "../EventsList";
 
 interface EventsInputProps {
   events: DataEvent[];

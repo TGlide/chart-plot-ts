@@ -13,3 +13,4 @@
 - [ ] Check dependencies
 - [ ] Fix react-window limit
 - [ ] Add resizing message
+- [ ] Fix resizing item height
