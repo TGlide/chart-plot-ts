@@ -1,15 +1,16 @@
 import React from "react";
 import { ResponsiveLine, Serie } from "@nivo/line";
 import "./styles.scss";
+import ChartError, { isChartError } from "../../entities/ChartError";
 
 interface EventsChartProps {
-  data: Serie[] | undefined;
+  data: Serie[] | ChartError | undefined;
 }
 
 export default ({ data }: EventsChartProps) => {
   return (
     <>
-      {data ? (
+      {data && !isChartError(data) && (
         <ResponsiveLine
           data={data}
           margin={{ top: 50, right: 200, bottom: 50, left: 60 }}
@@ -79,7 +80,22 @@ export default ({ data }: EventsChartProps) => {
             },
           ]}
         />
-      ) : (
+      )}
+
+      {isChartError(data) && (
+        <div className="empty-data">
+          <span className="icon">
+            <img
+              src={require("../../assets/chart-area-solid.svg")}
+              alt="Ícone de gráfico"
+            />
+          </span>
+          <span className="text">Error generating chart!</span>
+          <div className="message">{data.message}</div>
+        </div>
+      )}
+
+      {data === undefined && (
         <div className="empty-data">
           <span className="icon">
             <img

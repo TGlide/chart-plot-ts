@@ -1,279 +1,8 @@
 import { Serie, Datum } from "@nivo/line";
 import DataEvent from "../entities/DataEvent";
 import { timestampToString } from "./time";
-
-const exampleData: Serie[] = [
-  {
-    id: "japan",
-    color: "hsl(178, 70%, 50%)",
-    data: [
-      {
-        x: "plane",
-        y: 207,
-      },
-      {
-        x: "helicopter",
-        y: 168,
-      },
-      {
-        x: "boat",
-        y: 37,
-      },
-      {
-        x: "train",
-        y: 36,
-      },
-      {
-        x: "subway",
-        y: 93,
-      },
-      {
-        x: "bus",
-        y: 93,
-      },
-      {
-        x: "car",
-        y: 234,
-      },
-      {
-        x: "moto",
-        y: 135,
-      },
-      {
-        x: "bicycle",
-        y: 207,
-      },
-      {
-        x: "horse",
-        y: 51,
-      },
-      {
-        x: "skateboard",
-        y: 291,
-      },
-      {
-        x: "others",
-        y: 261,
-      },
-    ],
-  },
-  {
-    id: "france",
-    color: "hsl(330, 70%, 50%)",
-    data: [
-      {
-        x: "plane",
-        y: 146,
-      },
-      {
-        x: "helicopter",
-        y: 214,
-      },
-      {
-        x: "boat",
-        y: 210,
-      },
-      {
-        x: "train",
-        y: 102,
-      },
-      {
-        x: "subway",
-        y: 139,
-      },
-      {
-        x: "bus",
-        y: 87,
-      },
-      {
-        x: "car",
-        y: 121,
-      },
-      {
-        x: "moto",
-        y: 19,
-      },
-      {
-        x: "bicycle",
-        y: 205,
-      },
-      {
-        x: "horse",
-        y: 32,
-      },
-      {
-        x: "skateboard",
-        y: 15,
-      },
-      {
-        x: "others",
-        y: 99,
-      },
-    ],
-  },
-  {
-    id: "us",
-    color: "hsl(117, 70%, 50%)",
-    data: [
-      {
-        x: "plane",
-        y: 198,
-      },
-      {
-        x: "helicopter",
-        y: 150,
-      },
-      {
-        x: "boat",
-        y: 98,
-      },
-      {
-        x: "train",
-        y: 31,
-      },
-      {
-        x: "subway",
-        y: 1,
-      },
-      {
-        x: "bus",
-        y: 267,
-      },
-      {
-        x: "car",
-        y: 122,
-      },
-      {
-        x: "moto",
-        y: 140,
-      },
-      {
-        x: "bicycle",
-        y: 108,
-      },
-      {
-        x: "horse",
-        y: 278,
-      },
-      {
-        x: "skateboard",
-        y: 146,
-      },
-      {
-        x: "others",
-        y: 147,
-      },
-    ],
-  },
-  {
-    id: "germany",
-    color: "hsl(97, 70%, 50%)",
-    data: [
-      {
-        x: "plane",
-        y: 21,
-      },
-      {
-        x: "helicopter",
-        y: 252,
-      },
-      {
-        x: "boat",
-        y: 135,
-      },
-      {
-        x: "train",
-        y: 273,
-      },
-      {
-        x: "subway",
-        y: 126,
-      },
-      {
-        x: "bus",
-        y: 263,
-      },
-      {
-        x: "car",
-        y: 85,
-      },
-      {
-        x: "moto",
-        y: 97,
-      },
-      {
-        x: "bicycle",
-        y: 74,
-      },
-      {
-        x: "horse",
-        y: 195,
-      },
-      {
-        x: "skateboard",
-        y: 188,
-      },
-      {
-        x: "others",
-        y: 140,
-      },
-    ],
-  },
-  {
-    id: "norway",
-    color: "hsl(141, 70%, 50%)",
-    data: [
-      {
-        x: "plane",
-        y: 211,
-      },
-      {
-        x: "helicopter",
-        y: 257,
-      },
-      {
-        x: "boat",
-        y: 290,
-      },
-      {
-        x: "train",
-        y: 245,
-      },
-      {
-        x: "subway",
-        y: 239,
-      },
-      {
-        x: "bus",
-        y: 4,
-      },
-      {
-        x: "car",
-        y: 111,
-      },
-      {
-        x: "moto",
-        y: 186,
-      },
-      {
-        x: "bicycle",
-        y: 37,
-      },
-      {
-        x: "horse",
-        y: 241,
-      },
-      {
-        x: "skateboard",
-        y: 155,
-      },
-      {
-        x: "others",
-        y: 212,
-      },
-    ],
-  },
-];
+import ChartError from "../entities/ChartError";
+import { isArray, isNumber } from "util";
 
 interface SerieObj {
   [id: string]: {
@@ -281,13 +10,38 @@ interface SerieObj {
   };
 }
 
-function serieObjToArr(serieObj: SerieObj): Serie[] {
+interface ChartSpan {
+  begin: number;
+  end: number;
+}
+
+function serieObjToArr(serieObj: SerieObj, chartSpan: ChartSpan): Serie[] {
   const serieArr: Serie[] = [];
 
+  const chartSpanFilter = (datum: Datum) => {
+    return (
+      isNumber(datum.x) &&
+      datum.x <= chartSpan.end &&
+      datum.x >= chartSpan.begin
+    );
+  };
+
+  const chartSpanMap = (datum: Datum) => {
+    return {
+      ...datum,
+      x: isNumber(datum.x) ? timestampToString(datum.x) : datum.x,
+    };
+  };
+
   for (let key of Object.keys(serieObj)) {
+    let serieData = serieObj[key].data
+      .filter(chartSpanFilter)
+      .map(chartSpanMap);
+    if (serieData.length === 0) continue;
+
     const serie = {
       id: key,
-      data: serieObj[key].data,
+      data: serieData,
     };
     serieArr.push(serie);
   }
@@ -295,37 +49,60 @@ function serieObjToArr(serieObj: SerieObj): Serie[] {
   return serieArr;
 }
 
-export function generateChartData(events: DataEvent[]): Serie[] {
-  const data: SerieObj = {};
+export function generateChartData(events: DataEvent[]): Serie[] | ChartError {
+  const serieObj: SerieObj = {};
 
   let hasStarted = false;
   let selections: string[] = [];
   let groups: string[] = [];
+  let span: ChartSpan = { begin: 0, end: 0 };
 
   for (let event of events) {
     const { type, timestamp } = event;
 
     if (type === "start" && !hasStarted) {
-      selections = event.select ?? [];
-      groups = event.group ?? [];
+      const { select, group } = event;
+
+      if (!isArray(select) || select.length === 0)
+        return {
+          message: `Select field on event of type 'start' is invalid or empty.`,
+        } as ChartError;
+
+      if (!isArray(group) || group.length === 0)
+        return {
+          message: `Group field on event of type 'start' is invalid or empty.`,
+        } as ChartError;
+
+      selections = select;
+      groups = group;
       hasStarted = true;
+    }
+
+    if (type === "span" && hasStarted) {
+      const { begin, end } = event;
+
+      if (!begin || !end)
+        return { message: "Invalid span event." } as ChartError;
+
+      span.begin = begin;
+      span.end = end;
     }
 
     if (type === "data" && hasStarted) {
       let baseEventId = "";
-      groups.forEach((group) => (baseEventId += `${event[group] ?? ""} `));
+
+      groups.forEach((group) => (baseEventId += `${event[group] ?? "n/a"} `));
       baseEventId = baseEventId.trimEnd();
 
       selections.forEach((select) => {
-        if (!Object.keys(event).includes(select)) return;
-
         const eventId = `${baseEventId} ${select}`;
 
-        if (!Object.keys(data).includes(eventId)) data[eventId] = { data: [] };
+        if (!Object.keys(serieObj).includes(eventId))
+          serieObj[eventId] = { data: [] };
 
-        data[eventId].data.push({
-          x: timestampToString(timestamp),
-          y: event[select],
+        serieObj[eventId].data.push({
+          x: timestamp,
+          y: event[select] ?? null,
         });
       });
     }
@@ -337,7 +114,10 @@ export function generateChartData(events: DataEvent[]): Serie[] {
     }
   }
 
-  console.log(data, serieObjToArr(data));
+  const serieArr = serieObjToArr(serieObj, span);
 
-  return serieObjToArr(data);
+  if (serieArr.length === 0)
+    return { message: "No data generated from events." } as ChartError;
+
+  return serieArr;
 }
