@@ -19,7 +19,7 @@ function App() {
       canUndo: canUndoEvents,
       canRedo: canRedoEvents,
     },
-  ] = useUndo<DataEvent[]>(getExampleDataEventArr(100));
+  ] = useUndo<DataEvent[]>(getExampleDataEventArr(10));
   const { present: events } = eventsState;
   const [chartData, setChartData] = useState<Serie[] | ChartError | undefined>(
     undefined
