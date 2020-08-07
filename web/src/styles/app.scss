@@ -8,7 +8,7 @@
   flex-direction: column;
 
   .section {
-    padding: 0;
+    padding: 0 1rem;
   }
 
   .hero {
@@ -18,6 +18,11 @@
 
     .header {
       display: flex;
+      align-items: center;
+
+      img {
+        height: 35px;
+      }
 
       .title {
         margin-left: 1.5rem;
@@ -27,7 +32,7 @@
   }
 
   #event-input {
-    padding: 1rem 0 0;
+    padding: 1rem 1rem 0;
   }
 
   #events-chart {
