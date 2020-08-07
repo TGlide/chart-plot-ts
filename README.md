@@ -98,7 +98,7 @@ When rendering large lists of input events, the app struggled to mantain a smoot
 
 For charts, I opted to use the [Nivo](https://nivo.rocks/) library, for its lightweight installation (since it's not necessary to install all the chart modules), and quick configuration. The only cutback necessary, was using the canvas alternative for the line module. It's faster and lighter than its SVG counterpart, but it redners without smooth transitions.
 
-For generating the chart, initially, I made the calculations on the frontend, visible at `web/helpers/chart.ts`, but with a large collection of events, the browser started freezing while calculating, and it proved to be too demanding. With this in mind, a simple socket.io server was made, which receives the `DataEvent` array, and return the chartData, but the frontend still does one calculation: Since there can be multiple `start` and `stop` events, it only sends data from the last `start` event, as to minimize the data being sent. 
+For generating the chart, initially, I made the calculations on the frontend, visible at `web/helpers/chart.ts`, but with a large collection of events, the browser started freezing while calculating, and it proved to be too demanding. With this in mind, a simple socket.io server was made, which receives the `DataEvent` array, and returns the chartData, but the frontend still does one calculation: Since there can be multiple `start` and `stop` events, it only sends data from the last `start` event, as to minimize the data being sent. 
 
 
 
