@@ -7,8 +7,7 @@
 - [x] Change nivo to canvas
 - [x] Add react window
 - [x] Add input warnings
-- [ ] Socket io
+- [x] Socket io
 - [ ] Write tests
 - [ ] Check dependencies
 - [ ] Create documentation
-- [ ] Add resizing message

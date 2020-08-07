@@ -14,7 +14,6 @@ export default function EventsList({ events, height, style }: EventsListProps) {
   const getItemSize = (index: number) => {
     const size =
       24 + Math.floor(JSON.stringify(events[index]).length / 120) * 21;
-    console.log(index + 1, JSON.stringify(events[index]).length, size);
     return size;
   };
 

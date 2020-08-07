@@ -1,5 +1,5 @@
 import { Serie } from "@nivo/line";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useUndo from "use-undo";
 import EventsChart from "./components/EventsChart";
 import EventsInput from "./components/EventsInput";
@@ -8,6 +8,8 @@ import DataEvent from "./entities/DataEvent";
 import { generateChartData } from "./helpers/chart";
 import { getExampleDataEventArr } from "./helpers/input";
 import "./styles/app.scss";
+import socketIOClient from "socket.io-client";
+const ENDPOINT = "http://127.0.0.1:5000";
 
 function App() {
   const [
@@ -19,18 +21,32 @@ function App() {
       canUndo: canUndoEvents,
       canRedo: canRedoEvents,
     },
-  ] = useUndo<DataEvent[]>(getExampleDataEventArr(10));
+  ] = useUndo<DataEvent[]>(getExampleDataEventArr(100));
   const { present: events } = eventsState;
   const [chartData, setChartData] = useState<Serie[] | ChartError | undefined>(
     undefined
   );
 
+  const [socket, setSocket] = useState<SocketIOClient.Socket | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    setSocket(socketIOClient(ENDPOINT));
+  }, []);
+
+  useEffect(() => {
+    if (socket)
+      socket.on("setChartData", (data: Serie[] | ChartError | undefined) =>
+        setChartData(data)
+      );
+  }, [socket]);
+
   const handleGenerateChart = () => {
-    const data = generateChartData(events);
-
-    // console.log("generateChartData res:", data);
-
-    setChartData(data);
+    if (socket) {
+      console.log("a");
+      socket.emit("event", events);
+    }
   };
 
   return (
@@ -43,12 +59,11 @@ function App() {
                 src={require("./assets/logo.png")}
                 alt="Intelie - a RigNet company"
               />
-              <div className="title"> Thomas Gouveia Lopes Challenge </div>
+              <div className="title"> Thomas Gouveia Lopes Challenge</div>
             </div>
           </div>
         </div>
       </div>
-
       <section className="section" id="event-input">
         <div className="container">
           <EventsInput
