@@ -9,5 +9,4 @@
 - [x] Add input warnings
 - [x] Socket io
 - [ ] Write tests
-- [ ] Check dependencies
 - [ ] Create documentation

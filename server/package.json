@@ -1,0 +1,16 @@
+{
+  "name": "chart-plot-socket-server",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.7",
+    "@types/node": "^14.0.27",
+    "tslint": "^6.1.3"
+  }
+}

@@ -1,6 +1,9 @@
 import DataEvent from "../entities/DataEvent";
 
-export function getExampleDataEventArr(totalTimestamps: number): DataEvent[] {
+export function getExampleDataEventArr(
+  totalTimestamps: number,
+  repeatedData: number
+): DataEvent[] {
   const os = ["linux", "mac"];
   const browser = ["firefox", "chrome"];
   const select = ["min_response_time", "max_response_time"];
@@ -9,7 +12,7 @@ export function getExampleDataEventArr(totalTimestamps: number): DataEvent[] {
   const end_timestamp = starting_timestamp + totalTimestamps * 60000;
   let current_timestamp = starting_timestamp;
 
-  const dataEventArr: DataEvent[] = [
+  let dataEventArr: DataEvent[] = [
     {
       type: "start",
       timestamp: starting_timestamp,
@@ -39,6 +42,13 @@ export function getExampleDataEventArr(totalTimestamps: number): DataEvent[] {
     }
 
     current_timestamp += 60000;
+  }
+
+  dataEventArr.push({ type: "stop", timestamp: end_timestamp });
+  const firstDataEvents = dataEventArr.slice();
+
+  for (let i = 0; i < repeatedData; i++) {
+    dataEventArr = dataEventArr.concat(firstDataEvents, dataEventArr);
   }
 
   return dataEventArr;

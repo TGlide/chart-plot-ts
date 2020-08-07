@@ -1,24 +1,21 @@
-import { Serie, Datum } from "@nivo/line";
-import DataEvent from "../entities/DataEvent";
-import { timestampToString } from "./time";
-import ChartError from "../entities/ChartError";
-import { isArray, isNumber } from "util";
-
-interface SerieObj {
-  [id: string]: {
-    data: Datum[];
-  };
+function isNumber(value) {
+  return typeof value === "number" && isFinite(value);
 }
 
-interface ChartSpan {
-  begin: number;
-  end: number;
+function timestampToString(timestamp) {
+  const h = new Date(timestamp).getHours();
+  const m = new Date(timestamp).getMinutes();
+
+  const hours = h < 10 ? "0" + h : h;
+  const minutes = m < 10 ? "0" + m : m;
+
+  return hours + ":" + minutes;
 }
 
-function serieObjToArr(serieObj: SerieObj, chartSpan: ChartSpan): Serie[] {
-  const serieArr: Serie[] = [];
+function serieObjToArr(serieObj, chartSpan) {
+  const serieArr = [];
 
-  const chartSpanFilter = (datum: Datum) => {
+  const chartSpanFilter = (datum) => {
     return (
       isNumber(datum.x) &&
       datum.x <= chartSpan.end &&
@@ -26,15 +23,15 @@ function serieObjToArr(serieObj: SerieObj, chartSpan: ChartSpan): Serie[] {
     );
   };
 
-  const chartSpanMap = (datum: Datum) => {
+  const chartSpanMap = (datum) => {
     return {
       ...datum,
       x: isNumber(datum.x) ? timestampToString(datum.x) : datum.x,
     };
   };
 
-  for (let key of Object.keys(serieObj)) {
-    let serieData = serieObj[key].data
+  for (const key of Object.keys(serieObj)) {
+    const serieData = serieObj[key].data
       .filter(chartSpanFilter)
       .map(chartSpanMap);
     if (serieData.length === 0) continue;
@@ -49,30 +46,35 @@ function serieObjToArr(serieObj: SerieObj, chartSpan: ChartSpan): Serie[] {
   return serieArr;
 }
 
-export function generateChartData(events: DataEvent[]): Serie[] | ChartError {
-  const serieObj: SerieObj = {};
+function generateChartData(events) {
+  let serieObj = {};
 
   let hasStarted = false;
-  let selections: string[] = [];
-  let groups: string[] = [];
-  let span: ChartSpan = { begin: 0, end: 0 };
+  let selections = [];
+  let groups = [];
+  const span = { begin: 0, end: 0 };
 
-  for (let event of events) {
+  for (const event of events) {
     const { type, timestamp } = event;
+    if (!timestamp || !isNumber(timestamp))
+      return {
+        message: `Invalid event format.`,
+      };
 
     if (type === "start" && !hasStarted) {
       const { select, group } = event;
 
-      if (!isArray(select) || select.length === 0)
+      if (!Array.isArray(select) || select.length === 0)
         return {
           message: `Select field on event of type 'start' is invalid or empty.`,
-        } as ChartError;
+        };
 
-      if (!isArray(group) || group.length === 0)
+      if (!Array.isArray(group) || group.length === 0)
         return {
           message: `Group field on event of type 'start' is invalid or empty.`,
-        } as ChartError;
+        };
 
+      serieObj = {};
       selections = select;
       groups = group;
       hasStarted = true;
@@ -81,8 +83,7 @@ export function generateChartData(events: DataEvent[]): Serie[] | ChartError {
     if (type === "span" && hasStarted) {
       const { begin, end } = event;
 
-      if (!begin || !end)
-        return { message: "Invalid span event." } as ChartError;
+      if (!begin || !end) return { message: "Invalid span event." };
 
       span.begin = begin;
       span.end = end;
@@ -91,7 +92,9 @@ export function generateChartData(events: DataEvent[]): Serie[] | ChartError {
     if (type === "data" && hasStarted) {
       let baseEventId = "";
 
-      groups.forEach((group) => (baseEventId += `${event[group] ?? "n/a"} `));
+      groups.forEach(
+        (group) => (baseEventId += `${event[group] ? event[group] : "n/a"} `)
+      );
       baseEventId = baseEventId.trimEnd();
 
       selections.forEach((select) => {
@@ -102,7 +105,7 @@ export function generateChartData(events: DataEvent[]): Serie[] | ChartError {
 
         serieObj[eventId].data.push({
           x: timestamp,
-          y: event[select] ?? null,
+          y: event[select] ? event[select] : null,
         });
       });
     }
@@ -117,7 +120,9 @@ export function generateChartData(events: DataEvent[]): Serie[] | ChartError {
   const serieArr = serieObjToArr(serieObj, span);
 
   if (serieArr.length === 0)
-    return { message: "No data generated from events." } as ChartError;
+    return { message: "No chart generated from events." };
 
   return serieArr;
 }
+
+module.exports.generateChartData = generateChartData;
