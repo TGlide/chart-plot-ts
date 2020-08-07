@@ -1,6 +1,8 @@
 // Import Bulma's core
 @import "~bulma/sass/utilities/_all";
 
+@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Source+Sans+Pro&display=swap");
+
 // Set your colors
 $primary: #34b6ab;
 $primary-invert: findColorInvert($primary);
@@ -83,6 +85,8 @@ $colors: mergeColorMaps(
 $link: $primary;
 $link-invert: $primary-invert;
 $link-focus-border: $primary;
+
+$family-primary: "Source Sans Pro", sans-serif;
 
 // Import Bulma styles
 @import "~bulma/bulma.sass";

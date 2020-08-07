@@ -7,10 +7,8 @@
 - [x] Change nivo to canvas
 - [x] Add react window
 - [x] Add input warnings
+- [ ] Socket io
 - [ ] Write tests
 - [ ] Check dependencies
-- [ ] Fix react-window limit
-- [ ] Fix resizing item height
-- [ ] Socket io
 - [ ] Create documentation
 - [ ] Add resizing message
