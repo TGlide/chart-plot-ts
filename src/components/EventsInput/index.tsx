@@ -3,6 +3,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import DataEvent from "../../entities/DataEvent";
 import { isJsonString } from "../../helpers/json";
 import EventsList from "../EventsList";
+import "./styles.scss";
 
 interface EventsInputProps {
   events: DataEvent[];
@@ -24,6 +25,7 @@ export default function EventsInput({
   const [eventBoxHeight, setEventBoxHeight] = useState(0);
   const [isResizing, setIsResizing] = useState(false);
   const [eventInput, setEventInput] = useState("");
+  const [inputError, setInputError] = useState<boolean>(false);
 
   const eventInputBoxRef = useRef<HTMLInputElement>(null);
 
@@ -37,6 +39,9 @@ export default function EventsInput({
       const eventObject = JSON.parse(eventInput);
       setEvents([...events, eventObject]);
       setEventInput("");
+      setInputError(false);
+    } else {
+      setInputError(true);
     }
   };
 
@@ -86,7 +91,7 @@ export default function EventsInput({
       onResizeStart={handleResizeStart}
       onResizeStop={handleResizeStop}
     >
-      <div className="content">
+      <div className="list-container">
         <EventsList
           events={events}
           height={eventBoxHeight}
@@ -102,7 +107,7 @@ export default function EventsInput({
         </label>
         <input
           type="text"
-          className="input"
+          className={`input ${inputError && "is-danger"}`}
           value={eventInput}
           onChange={eventInputChange}
           onKeyPress={eventInputKeyPress}
@@ -134,6 +139,7 @@ export default function EventsInput({
         >
           Enter
         </button>
+        <span>{inputError}</span>
       </div>
     </Resizable>
   );
