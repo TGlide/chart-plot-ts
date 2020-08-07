@@ -12,6 +12,7 @@ export default ({ data }: EventsChartProps) => {
     <>
       {data && !isChartError(data) && (
         <ResponsiveLineCanvas
+          data-testid="chart-el"
           data={data}
           margin={{ top: 50, right: 200, bottom: 50, left: 60 }}
           xScale={{ type: "point" }}
@@ -83,7 +84,7 @@ export default ({ data }: EventsChartProps) => {
       )}
 
       {isChartError(data) && (
-        <div className="empty-data">
+        <div className="error-data">
           <span className="icon">
             <img
               src={require("../../assets/chart-area-solid.svg")}

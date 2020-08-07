@@ -1,6 +1,7 @@
 @import "../../styles/config.scss";
 
-.empty-data {
+.empty-data,
+.error-data {
   height: 100%;
 
   display: flex;
